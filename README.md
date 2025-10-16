@@ -35,11 +35,6 @@ This project demonstrates practical **AI, ML, and web development skills** for d
 
 ---
 ```
-
-## 📂 Project Structure
-
-```
-
 ## 📂 Project Structure
 AI-Assistant/
 ├── app.py # Main Streamlit app
