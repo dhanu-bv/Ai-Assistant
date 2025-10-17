@@ -27,6 +27,32 @@ This project demonstrates practical **AI, ML, and web development skills** for d
 
 ---
 
+## ⚙️ Getting Started
+
+### Prerequisites
+- A modern web browser like Google Chrome.
+- A code editor like VS Code.
+
+### Installation & Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/dhanu-bv/AI-Assistant.git](https://github.com/dhanu-bv/AI-Assistant.git)
+    cd AI-Assistant
+    ```
+
+2.  **Add Your API Keys:**
+    * Open the `index.html` file.
+    * Find the `firebaseConfig` object and replace the placeholder values with your new Firebase project's credentials.
+    * Find the `callGeminiAPI` function and replace the placeholder for the `apiKey` with your new Google Gemini API key.
+
+3.  **Run the application:**
+    * Simply open the `index.html` file directly in your web browser.
+
+> **⚠️ Security Warning:** This project places the Gemini API key directly in the frontend code. This is **not secure** for a public website. For personal use or demonstration, it is acceptable, but for a production application, you should move the API call to a backend server to protect your key.
+
+---
+
 ## ⚡ Future Enhancements
 - Integrate more AI tools for complex queries  
 - Add multi-language support  
