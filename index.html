@@ -55,7 +55,6 @@
 </head>
 <body class="text-white flex flex-col items-center justify-center min-h-screen p-4">
 
-    <!-- Login Container -->
     <div id="login-container" class="w-full max-w-md text-center">
         <div class="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700">
             <svg class="w-16 h-16 mx-auto mb-4 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
@@ -68,9 +67,7 @@
         </div>
     </div>
     
-    <!-- Main App Container -->
     <div id="app-container" class="w-full max-w-2xl bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl flex flex-col h-[85vh] hidden border border-slate-700">
-        <!-- Header -->
         <div class="p-4 border-b border-slate-700 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                  <svg class="w-8 h-8 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
@@ -89,12 +86,9 @@
             </div>
         </div>
 
-        <!-- Chat Container -->
         <div id="chat-container" class="flex-grow p-4 overflow-y-auto space-y-4">
-            <!-- Messages will be loaded here -->
-        </div>
+            </div>
 
-        <!-- Controls -->
         <div class="p-4 border-t border-slate-700">
              <div class="flex items-center space-x-4">
                 <button id="mic-button" class="bg-slate-700 hover:bg-red-600 transition-all duration-300 text-white rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center shadow-lg focus:outline-none">
@@ -137,7 +131,7 @@
         
         try {
             const firebaseConfig = {
-              apiKey: "AIzaSyCdQbgflhJvaPjXe6cMP314WZ8pZonP4Kc",
+              apiKey: "YOUR_FIREBASE_API_KEY", // <-- KEY REPLACED
               authDomain: "aivoiceassistant-48459.firebaseapp.com",
               projectId: "aivoiceassistant-48459",
               storageBucket: "aivoiceassistant-48459.appspot.com",
@@ -406,9 +400,9 @@
         
         // --- GEMINI API INTEGRATION ---
         async function callGeminiAPI(prompt, conversationHistory) {
-             const apiKey = "AIzaSyDtOibBrawG2SA-OrVsohoGvkWsPTQzhs0"; 
+             const apiKey = "YOUR_GEMINI_API_KEY"; // <-- KEY REPLACED
              
-             if (!apiKey || apiKey === "PASTE_YOUR_GOOGLE_AI_API_KEY_HERE") {
+             if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY" || apiKey === "PASTE_YOUR_GOOGLE_AI_API_KEY_HERE") {
                 const errorMessage = "Google AI API key is missing. Please add it to the code.";
                 console.error(errorMessage);
                 saveMessage(errorMessage, 'assistant');
@@ -417,7 +411,7 @@
                 return;
              }
 
-             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
              const systemPrompt = `You are a helpful and concise voice assistant. 
                 Your name is Synapse. Today is ${new Date().toLocaleDateString()}.
@@ -427,52 +421,52 @@
                 Do not use markdown formatting.`;
 
              const payload = {
-                 contents: conversationHistory, // Send the entire conversation history
-                 systemInstruction: {
-                     parts: [{ text: systemPrompt }]
-                 },
-                 tools: [{ "google_search": {} }] // For real-time info like weather
+                  contents: conversationHistory, // Send the entire conversation history
+                  systemInstruction: {
+                      parts: [{ text: systemPrompt }]
+                  },
+                  tools: [{ "google_search": {} }] // For real-time info like weather
              };
 
              try {
-                let retries = 3;
-                let response;
-                while (retries > 0) {
-                    try {
-                        response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-                        if (response.ok) break;
-                    } catch (error) {
-                         console.error('Fetch error:', error);
-                    }
-                    retries--;
-                    if (retries > 0) await new Promise(res => setTimeout(res, 1000 * (4 - retries)));
-                }
+                  let retries = 3;
+                  let response;
+                  while (retries > 0) {
+                      try {
+                          response = await fetch(apiUrl, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(payload)
+                          });
+                          if (response.ok) break;
+                      } catch (error) {
+                           console.error('Fetch error:', error);
+                      }
+                      retries--;
+                      if (retries > 0) await new Promise(res => setTimeout(res, 1000 * (4 - retries)));
+                  }
 
-                 if (!response || !response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                 }
+                   if (!response || !response.ok) {
+                       throw new Error(`API request failed with status ${response.status}`);
+                   }
 
-                 const result = await response.json();
-                 const assistantResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                   const result = await response.json();
+                   const assistantResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
-                 if (assistantResponse) {
-                     saveMessage(assistantResponse, 'assistant');
-                     speak(assistantResponse);
-                 } else {
-                     throw new Error('No content in API response.');
-                 }
+                   if (assistantResponse) {
+                       saveMessage(assistantResponse, 'assistant');
+                       speak(assistantResponse);
+                   } else {
+                       throw new Error('No content in API response.');
+                   }
 
              } catch (error) {
-                 console.error('Error calling Gemini API:', error);
-                 const errorMessage = 'I seem to be having trouble connecting. Please try again in a moment.';
-                 saveMessage(errorMessage, 'assistant');
-                 speak(errorMessage);
+                  console.error('Error calling Gemini API:', error);
+                  const errorMessage = 'I seem to be having trouble connecting. Please try again in a moment.';
+                  saveMessage(errorMessage, 'assistant');
+                  speak(errorMessage);
              } finally {
-                 updateStatus('Idle', 'bg-slate-500');
+                  updateStatus('Idle', 'bg-slate-500');
              }
         }
         
